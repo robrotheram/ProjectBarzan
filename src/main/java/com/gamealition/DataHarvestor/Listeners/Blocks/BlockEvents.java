@@ -4,8 +4,6 @@ import com.gamealition.DataHarvestor.Datastore.BlockData;
 import com.gamealition.DataHarvestor.Datastore.DataStore;
 import com.gamealition.DataHarvestor.Datastore.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -36,7 +34,6 @@ public class BlockEvents implements Listener{
                 event.getBlock().getType().name()
             ));
    };
-
     @EventHandler(priority = EventPriority.MONITOR)
     public void BlockBurnEvent(BlockBurnEvent events){
         storeBlockEvent(events, null );
