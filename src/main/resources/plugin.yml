@@ -1,0 +1,5 @@
+name: DataHarvestor
+main: com.gamealition.DataHarvestor.DataHarvestor
+version: 1.0.8
+author: Robrotheram
+description: DataHarvestor
