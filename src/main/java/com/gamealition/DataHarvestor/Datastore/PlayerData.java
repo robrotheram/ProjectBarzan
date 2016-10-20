@@ -17,6 +17,7 @@ public class PlayerData {
     private String  vecial = "NA";
     private double  health = 0;
     private double  level = 0;
+    private String chatMessage = null;
 
     public PlayerData(String UUID, String name, String gameMode, boolean isflight, boolean isvecial, String vecial, double health, double level, Location location,String event) {
         this.UUID = UUID;
@@ -123,6 +124,10 @@ public class PlayerData {
         this.location = location;
     }
 
+    public void setChatMessage(String chatMessage) {
+        this.chatMessage = chatMessage;
+    }
+
     public String toString(){
         return location.toString()+"\n"+
                 event+"\n"+
@@ -147,11 +152,15 @@ public class PlayerData {
         obj.put("playerVehicle", vecial);
         obj.put("playerHealth", health);
         obj.put("playerLevel", level);
-        obj.put("playerEvent", event);
+        obj.put("EventType", event);
         obj.put("playerLocation", location.getJSON());
-
+        if(chatMessage!=null){
+            obj.put("message",chatMessage);
+        }
         return obj;
     }
+
+
 }
 
 

@@ -46,6 +46,7 @@ public class DataHarvestor extends JavaPlugin{
         httpsend = new HttpSend(instance);
         getLogger().log(Level.WARNING,"Hello All this is a test plugin");
         final TPSUtil tpsUtil = new TPSUtil(instance,dataStore);
+        tpsUtil.run();
 
         getServer().getPluginManager().registerEvents(new PlayerEvents(dataStore),this);
         getServer().getPluginManager().registerEvents(new BlockEvents(dataStore),this);
@@ -83,20 +84,42 @@ public class DataHarvestor extends JavaPlugin{
             @Override
             public void run() {
                 JSONArray obj = new JSONArray();
+                int totalEnityCount = 0;
                 for (World world: instance.getServer().getWorlds()) {
                     JSONObject wObj = new JSONObject();
 
                     JSONArray loc = new JSONArray();
                     JSONArray ent = new JSONArray();
                     for (Chunk c : world.getLoadedChunks()) {
-                        loc.add(new Location(world.getName(),c.getX(),0,c.getZ()));
+                        JSONObject chunk = new JSONObject();
+                        chunk.put("location",new Location(world.getName(),c.getX(),0,c.getZ()));
+                        chunk.put("NumberOFEnities",c.getEntities().length);
+                        loc.add(chunk);
                     }
+                    world.getEntities().size();
                     wObj.put("worldName", world.getName());
                     wObj.put("loadedChunks", loc);
+                    wObj.put("NumberEnities",world.getEntities().size());
+                    totalEnityCount +=world.getEntities().size();
                     obj.add(wObj);
                 }
+                JSONObject serverMeta = new JSONObject();
+                SystemInfo sysInfo = new SystemInfo();
+
+                serverMeta.put("TotalMemory",sysInfo.totalMem());
+                serverMeta.put("UsedMemory",sysInfo.usedMem());
+                try {
+                    serverMeta.put("CPULoad",sysInfo.getProcessCpuLoad());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
                 JSONObject jobj = new JSONObject();
-                jobj.put("data",obj);
+                jobj.put("Worlds",obj);
+                jobj.put("TPS",tpsUtil.getTPS());
+                jobj.put("Enities",totalEnityCount);
+                jobj.put("ServerMeta",serverMeta);
+
                 httpsend.sendHTTPData("/server",jobj);
             }
         }, 50L, 1200L); //update onece a min;

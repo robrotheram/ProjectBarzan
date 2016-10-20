@@ -94,8 +94,8 @@ public class BlockData {
     public JSONObject getJSON(){
         JSONObject obj = new JSONObject();
         obj.put("playerUUID", UUID);
-        obj.put("event", event);
-        obj.put("cuase", cuase);
+        obj.put("EventType", event);
+        obj.put("Cause", cuase);
         obj.put("blockName", blockName);
         obj.put("breakNaturally", breakNaturally);
         obj.put("playerLocation", location.getJSON());

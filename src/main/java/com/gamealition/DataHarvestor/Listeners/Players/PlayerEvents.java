@@ -39,6 +39,30 @@ public class PlayerEvents implements Listener {
         dataStore.addPlayer(pd);
     }
 
+    private void storePlayerEvent(AsyncPlayerChatEvent event, String message) {
+        PlayerData pd = new PlayerData();
+        pd.setUUID(event.getPlayer().getUniqueId().toString());
+        pd.setName(event.getPlayer().getDisplayName());
+        pd.setGameMode(event.getPlayer().getGameMode().toString());
+        pd.setIsflight(event.getPlayer().isFlying());
+        pd.setIsvecial(event.getPlayer().isInsideVehicle());
+        if (pd.isvecial()){ pd.setVecial(event.getPlayer().getVehicle().getType().name());}
+        pd.setHealth(event.getPlayer().getHealth());
+        pd.setLevel(event.getPlayer().getLevel());
+        pd.setEvent(event.getEventName());
+
+        pd.setLocation(new Location(
+                event.getPlayer().getLocation().getWorld().getName(),
+                event.getPlayer().getLocation().getBlockX(),
+                event.getPlayer().getLocation().getBlockY(),
+                event.getPlayer().getLocation().getBlockZ()
+        ));
+        pd.setChatMessage(message);
+        dataStore.addPlayer(pd);
+    }
+
+
+
     @EventHandler(priority = EventPriority.MONITOR)
     public void PlayerUnleashEntityEvent(PlayerUnleashEntityEvent event) {
         PlayerData pd = new PlayerData();
@@ -64,8 +88,12 @@ public class PlayerEvents implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void AsyncPlayerChatEvent(AsyncPlayerChatEvent event) {
-        storePlayerEvent(event);
+
+        storePlayerEvent(event,event.getMessage());
     }
+
+
+
     @EventHandler(priority = EventPriority.MONITOR)
     public void AsyncPlayerPreLoginEvent(AsyncPlayerPreLoginEvent event) {
         PlayerData pd = new PlayerData();

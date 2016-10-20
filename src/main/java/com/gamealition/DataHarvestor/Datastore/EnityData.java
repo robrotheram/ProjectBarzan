@@ -69,8 +69,8 @@ public class EnityData {
 
     public JSONObject getJSON(){
         JSONObject obj = new JSONObject();
-        obj.put("eventName", eventName);
-        obj.put("enityName", enityName);
+        obj.put("EntityName", enityName);
+        obj.put("EventType", eventName);
         obj.put("blockName", blockName);
         obj.put("location", location.getJSON());
         return  obj;

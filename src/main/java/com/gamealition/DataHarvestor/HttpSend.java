@@ -25,12 +25,15 @@ public class HttpSend {
         HttpURLConnection connection = null;
         try {
             URL url=new URL(DataHarvestor.getInstance().getConfigData().getAPIURL()+urlpath);
+            DataHarvestor.getInstance().getLogger().log(Level.WARNING,"URL: "+ url.toString());
             connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
             connection.setDoInput(true);
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setRequestProperty("Accept", "application/json");
+            connection.setRequestProperty("x-access-token", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VySUQiOiI1NzU2YWQwMGVmZmZiMjk0Y2RjY2I3YWUiLCJpYXQiOjE0Njg2NzU2NDF9.F936QDvysFBZH8O-P3dxlPVjXaOUCIJ0n3iScB1V468");
+
             OutputStreamWriter streamWriter = new OutputStreamWriter(connection.getOutputStream());
             streamWriter.write(json.toString());
             streamWriter.flush();

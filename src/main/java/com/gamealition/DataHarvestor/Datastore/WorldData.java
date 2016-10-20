@@ -61,7 +61,7 @@ public class WorldData {
 
     public JSONObject getJSON(){
         JSONObject obj = new JSONObject();
-        obj.put("eventName", eventName);
+        obj.put("EventType", eventName);
         obj.put("isloaded", loaded);
         obj.put("playerLocation", location.getJSON());
 
