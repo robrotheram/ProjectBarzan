@@ -1,6 +1,5 @@
 package com.gamealition.DataHarvestor;
 
-import com.gamealition.DataHarvestor.Datastore.DataStore;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 

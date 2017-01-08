@@ -1,4 +1,4 @@
-package com.gamealition.DataHarvestor.Datastore;
+package com.gamealition.DataHarvestor.Utils;
 
 import org.json.simple.JSONObject;
 
@@ -19,6 +19,15 @@ public class Location {
         this.y = y;
         this.z = z;
     }
+
+    public Location(org.bukkit.Location location) {
+        this.world = location.getWorld().getName();
+        this.x = location.getBlockX();
+        this.y = location.getBlockY();
+        this.z = location.getBlockZ();
+    }
+
+
 
     public String getWorld() {
 
@@ -65,5 +74,13 @@ public class Location {
         object.put("y",y);
         object.put("z",z);
         return object;
+    }
+
+    public boolean compare(Location location) {
+        return
+                this.getWorld().equals(location.getWorld()) &&
+                this.getX()==location.getX() &&
+                this.getY()==location.getY() &&
+                this.getZ()==location.getZ();
     }
 }

@@ -32,7 +32,7 @@ public class HttpSend {
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setRequestProperty("Accept", "application/json");
-            connection.setRequestProperty("x-access-token", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VySUQiOiI1NzU2YWQwMGVmZmZiMjk0Y2RjY2I3YWUiLCJpYXQiOjE0Njg2NzU2NDF9.F936QDvysFBZH8O-P3dxlPVjXaOUCIJ0n3iScB1V468");
+            connection.setRequestProperty("Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2ZXJOYW1lIjoidGVzdF9zZXJ2ZXIifQ.X9HZSlGAPWiecEyRbIGj689K9CuoNmlf7_LubNj2MkA");
 
             OutputStreamWriter streamWriter = new OutputStreamWriter(connection.getOutputStream());
             streamWriter.write(json.toString());

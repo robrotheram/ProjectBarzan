@@ -1,297 +1,202 @@
 package com.gamealition.DataHarvestor.Listeners.Players;
 
-import com.gamealition.DataHarvestor.Datastore.DataStore;
-import com.gamealition.DataHarvestor.Datastore.Location;
-import com.gamealition.DataHarvestor.Datastore.PlayerData;
-import org.bukkit.event.Event;
+import com.gamealition.DataHarvestor.DataStore;
+import com.gamealition.DataHarvestor.Events.*;
+import com.gamealition.DataHarvestor.Events.PlayerChatEvnt;
+import com.gamealition.DataHarvestor.Events.PlayerEvnt;
+import com.gamealition.DataHarvestor.Utils.Location;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
-
-/**
- * Created by robert on 11/05/2016.
- */
 public class PlayerEvents implements Listener {
+
     private DataStore dataStore;
     public PlayerEvents(DataStore dataStore) {
         this.dataStore = dataStore;
     }
 
-    public void storePlayerEvent(PlayerEvent event){
-        PlayerData pd = new PlayerData();
-        pd.setUUID(event.getPlayer().getUniqueId().toString());
-        pd.setName(event.getPlayer().getDisplayName());
-        pd.setGameMode(event.getPlayer().getGameMode().toString());
-        pd.setIsflight(event.getPlayer().isFlying());
-        pd.setIsvecial(event.getPlayer().isInsideVehicle());
-        if (pd.isvecial()){ pd.setVecial(event.getPlayer().getVehicle().getType().name());}
-        pd.setHealth(event.getPlayer().getHealth());
-        pd.setLevel(event.getPlayer().getLevel());
-        pd.setEvent(event.getEventName());
-
-        pd.setLocation(new Location(
-                event.getPlayer().getLocation().getWorld().getName(),
-                event.getPlayer().getLocation().getBlockX(),
-                event.getPlayer().getLocation().getBlockY(),
-                event.getPlayer().getLocation().getBlockZ()
-        ));
-        dataStore.addPlayer(pd);
-    }
-
-    private void storePlayerEvent(AsyncPlayerChatEvent event, String message) {
-        PlayerData pd = new PlayerData();
-        pd.setUUID(event.getPlayer().getUniqueId().toString());
-        pd.setName(event.getPlayer().getDisplayName());
-        pd.setGameMode(event.getPlayer().getGameMode().toString());
-        pd.setIsflight(event.getPlayer().isFlying());
-        pd.setIsvecial(event.getPlayer().isInsideVehicle());
-        if (pd.isvecial()){ pd.setVecial(event.getPlayer().getVehicle().getType().name());}
-        pd.setHealth(event.getPlayer().getHealth());
-        pd.setLevel(event.getPlayer().getLevel());
-        pd.setEvent(event.getEventName());
-
-        pd.setLocation(new Location(
-                event.getPlayer().getLocation().getWorld().getName(),
-                event.getPlayer().getLocation().getBlockX(),
-                event.getPlayer().getLocation().getBlockY(),
-                event.getPlayer().getLocation().getBlockZ()
-        ));
-        pd.setChatMessage(message);
-        dataStore.addPlayer(pd);
-    }
-
-
-
     @EventHandler(priority = EventPriority.MONITOR)
     public void PlayerUnleashEntityEvent(PlayerUnleashEntityEvent event) {
-        PlayerData pd = new PlayerData();
-        pd.setUUID(event.getPlayer().getUniqueId().toString());
-        pd.setName(event.getPlayer().getDisplayName());
-        pd.setGameMode(event.getPlayer().getGameMode().toString());
-        pd.setIsflight(event.getPlayer().isFlying());
-        pd.setIsvecial(event.getPlayer().isInsideVehicle());
-        if (pd.isvecial()){ pd.setVecial(event.getPlayer().getVehicle().getType().name());}
-        pd.setHealth(event.getPlayer().getHealth());
-        pd.setLevel(event.getPlayer().getLevel());
-        pd.setEvent(event.getEventName());
-
-        pd.setLocation(new Location(
-                event.getPlayer().getLocation().getWorld().toString(),
-                event.getPlayer().getLocation().getBlockX(),
-                event.getPlayer().getLocation().getBlockY(),
-                event.getPlayer().getLocation().getBlockZ()
-        ));
-
-        dataStore.addPlayer(pd);
+        PlayerEnityEvnt pv = new PlayerEnityEvnt(
+                event.getPlayer(),
+                new Location(event.getPlayer().getLocation()),
+                EventType.PLAYER_SPAWNED_ENTITY,
+                event.getEntity()
+        );
+        dataStore.pushEvent( pv );
     }
-
     @EventHandler(priority = EventPriority.MONITOR)
     public void AsyncPlayerChatEvent(AsyncPlayerChatEvent event) {
-
-        storePlayerEvent(event,event.getMessage());
-    }
-
-
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void AsyncPlayerPreLoginEvent(AsyncPlayerPreLoginEvent event) {
-        PlayerData pd = new PlayerData();
-        pd.setUUID(event.getUniqueId().toString());
-        pd.setName(event.getName());
-        pd.setEvent(event.getEventName());
-        dataStore.addPlayer(pd);
+        PlayerChatEvnt pv = new PlayerChatEvnt(
+                event.getPlayer(),
+                new Location(event.getPlayer().getLocation()),
+                EventType.PLAYER_CHAT,
+                event.getMessage()
+        );
+        dataStore.pushEvent( pv );
     }
     @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerAchievementAwardedEvent(PlayerAchievementAwardedEvent event) {
-        storePlayerEvent(event);
-    }
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerArmorStandManipulateEvent(PlayerArmorStandManipulateEvent event) {
-        storePlayerEvent(event);
-    }
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerBedEnterEvent(PlayerBedEnterEvent event) {
-        storePlayerEvent(event);
-    }
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerBedLeaveEvent(PlayerBedLeaveEvent event) {
-        storePlayerEvent(event);
-    }
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerBucketEmptyEvent(PlayerBucketEmptyEvent event) {
-        storePlayerEvent(event);
-    }
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerBucketEvent(PlayerBucketEmptyEvent event) {
-        storePlayerEvent(event);
-    }
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerBucketFillEvent(PlayerBucketFillEvent event) {
-        storePlayerEvent(event);
-    }
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerChangedWorldEvent(PlayerChangedWorldEvent event) {
-        storePlayerEvent(event);
-    }
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerChannelEvent(PlayerChannelEvent event) {
-        storePlayerEvent(event);
-    }
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerChatTabCompleteEvent(PlayerChatTabCompleteEvent event) {
-        storePlayerEvent(event);
-    }
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent event) {
-        storePlayerEvent(event);
-    }
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerDropItemEvent(PlayerDropItemEvent event) {
-        storePlayerEvent(event);
-    }
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerEditBookEvent(PlayerEditBookEvent event) {
-        storePlayerEvent(event);
-    }
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerEggThrowEvent(PlayerEggThrowEvent event) {
-        storePlayerEvent(event);
-    }
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerExpChangeEvent(PlayerExpChangeEvent event) {
-        storePlayerEvent(event);
-    }
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerFishEvent(PlayerFishEvent event) {
-        storePlayerEvent(event);
-    }
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerGameModeChangeEvent(PlayerGameModeChangeEvent event) {
-        storePlayerEvent(event);
-    }
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerInteractAtEntityEvent(PlayerInteractAtEntityEvent event) {
-        storePlayerEvent(event);
-    }
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerInteractEntityEvent(PlayerInteractEntityEvent event) {
-        storePlayerEvent(event);
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerInteractEvent(PlayerInteractEvent event) {
-        storePlayerEvent(event);
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerItemBreakEvent(PlayerItemBreakEvent event) {
-        storePlayerEvent(event);
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerItemConsumeEvent(PlayerItemConsumeEvent event) {
-        storePlayerEvent(event);
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerItemHeldEvent(PlayerItemHeldEvent event) {
-        storePlayerEvent(event);
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerJoinEvent(PlayerJoinEvent event) {
-        storePlayerEvent(event);
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerKickEvent(PlayerKickEvent event) {
-        storePlayerEvent(event);
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerLevelChangeEvent(PlayerLevelChangeEvent event) {
-        storePlayerEvent(event);
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerLoginEvent(PlayerLoginEvent event) {
-        storePlayerEvent(event);
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerMoveEvent(PlayerMoveEvent event) {
-        storePlayerEvent(event);
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerPickupItemEvent(PlayerPickupItemEvent event) {
-        storePlayerEvent(event);
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerPortalEvent(PlayerPortalEvent event) {
-        storePlayerEvent(event);
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerQuitEvent(PlayerQuitEvent event) {
-        storePlayerEvent(event);
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerRegisterChannelEvent(PlayerRegisterChannelEvent event) {
-        storePlayerEvent(event);
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerResourcePackStatusEvent(PlayerResourcePackStatusEvent event) {
-        storePlayerEvent(event);
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerRespawnEvent(PlayerRespawnEvent event) {
-        storePlayerEvent(event);
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerShearEntityEvent(PlayerShearEntityEvent event) {
-        storePlayerEvent(event);
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerStatisticIncrementEvent(PlayerStatisticIncrementEvent event) {
-        storePlayerEvent(event);
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerTeleportEvent(PlayerTeleportEvent event) {
-        storePlayerEvent(event);
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerToggleFlightEvent(PlayerToggleFlightEvent event) {
-        storePlayerEvent(event);
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        PlayerEvnt pv = new PlayerEvnt(
+                event.getPlayer(),
+                new Location(event.getPlayer().getLocation()),
+                EventType.PLAYER_JOIN
+        );
+        dataStore.pushEvent( pv );
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void PlayerToggleSneakEvent(PlayerToggleSneakEvent event) {
-        storePlayerEvent(event);
+        PlayerEvnt pv = new PlayerEvnt(
+                event.getPlayer(),
+                new Location(event.getPlayer().getLocation()),
+                EventType.PLAYER_SNEAK
+        );
+        dataStore.pushEvent( pv );
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerToggleSprintEvent(PlayerToggleSprintEvent event) {
-        storePlayerEvent(event);
+    public void PlayerBedEnterEvent(PlayerBedEnterEvent event) {
+        PlayerEvnt pv = new PlayerEvnt(
+                event.getPlayer(),
+                new Location(event.getPlayer().getLocation()),
+                EventType.PLAYER_ENTER_BED
+        );
+        dataStore.pushEvent( pv );
     }
     @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerUnregisterChannelEvent(PlayerUnregisterChannelEvent event) {
-        storePlayerEvent(event);
+    public void PlayerBedLeaveEvent(PlayerBedLeaveEvent event) {
+        PlayerEvnt pv = new PlayerEvnt(
+                event.getPlayer(),
+                new Location(event.getPlayer().getLocation()),
+                EventType.PLAYER_LEAVE_BED
+        );
+        dataStore.pushEvent( pv );
+    }
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void PlayerChangedWorldEvent(PlayerChangedWorldEvent event) {
+        PlayerEvnt pv = new PlayerEvnt(
+                event.getPlayer(),
+                new Location(event.getPlayer().getLocation()),
+                EventType.PLAYER_CHANGE_WORLD
+        );
+        dataStore.pushEvent( pv );
+    }
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void PlayerDropItemEvent(PlayerDropItemEvent event) {
+        PlayerItemEvnt pv = new PlayerItemEvnt(
+                event.getPlayer(),
+                new Location(event.getPlayer().getLocation()),
+                EventType.PLAYER_DROP_ITEM,
+                event.getItemDrop().getItemStack()
+        );
+        dataStore.pushEvent( pv );
+    }
+
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void PlayerMoveEvent(PlayerMoveEvent event) {
+        PlayerEvnt pv = new PlayerEvnt(
+                event.getPlayer(),
+                new Location(event.getPlayer().getLocation()),
+                EventType.PLAYER_MOVE
+        );
+        dataStore.pushEvent( pv );
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void PlayerVelocityEvent(PlayerVelocityEvent event) {
-        storePlayerEvent(event);
+    public void PlayerPickupItemEvent(PlayerPickupItemEvent event) {
+        PlayerItemEvnt pv = new PlayerItemEvnt(
+                event.getPlayer(),
+                new Location(event.getPlayer().getLocation()),
+                EventType.PLAYER_PICKUP_ITEM,
+                event.getItem().getItemStack()
+        );
+        dataStore.pushEvent( pv );
     }
 
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPlayerDeath(PlayerDeathEvent event) {
+        Player player = event.getEntity();
+        if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent) {
+            EntityDamageByEntityEvent nEvent = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();
+            PlayerDeathEvnt pv = new PlayerDeathEvnt(
+                    event.getEntity(),
+                    new Location(event.getEntity().getLocation()),
+                    EventType.PLAYER_PICKUP_ITEM,
+                    nEvent.getCause(),
+                    nEvent.getDamager()
+            );
+            dataStore.pushEvent( pv );
+        }
+    }
 
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void PlayerPortalEvent(PlayerPortalEvent event) {
+        PlayerTPEvnt pv = new PlayerTPEvnt(
+                event.getPlayer(),
+                new Location(event.getPlayer().getLocation()),
+                EventType.PLAYER_PORTAL,
+                event.getCause()
+        );
+        dataStore.pushEvent( pv );
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void PlayerQuitEvent(PlayerQuitEvent event) {
+        PlayerEvnt pv = new PlayerEvnt(
+                event.getPlayer(),
+                new Location(event.getPlayer().getLocation()),
+                EventType.PLAYER_LEAVE
+        );
+        dataStore.pushEvent( pv );
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void PlayerRespawnEvent(PlayerRespawnEvent event) {
+        PlayerEvnt pv = new PlayerEvnt(
+                event.getPlayer(),
+                new Location(event.getPlayer().getLocation()),
+                EventType.PLAYER_RESPAWN
+        );
+        dataStore.pushEvent( pv );
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void PlayerTeleportEvent(PlayerTeleportEvent event) {
+        PlayerTPEvnt pv = new PlayerTPEvnt(
+            event.getPlayer(),
+            new Location(event.getPlayer().getLocation()),
+            EventType.PLAYER_TELEPORT,
+            event.getCause()
+        );
+        dataStore.pushEvent( pv );
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onBlockPlace(BlockPlaceEvent event) {
+        PlayerBlockEvnt pv = new PlayerBlockEvnt(
+                event.getPlayer(),
+                new Location(event.getPlayer().getLocation()),
+                EventType.PLAYER_BLOCK_PLACE,
+                event.getBlock()
+        );
+        dataStore.pushEvent( pv );
+    }
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onBlockBreak(BlockBreakEvent event) {
+        PlayerBlockEvnt pv = new PlayerBlockEvnt(
+                event.getPlayer(),
+                new Location(event.getPlayer().getLocation()),
+                EventType.PLAYER_BLOCK_BREAK,
+                event.getBlock()
+        );
+        dataStore.pushEvent( pv );
+    }
 }
