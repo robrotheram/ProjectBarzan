@@ -1,6 +1,7 @@
 package com.gamealition.DataHarvestor.Services.World;
 
 import com.gamealition.DataHarvestor.DataHarvestor;
+import com.gamealition.DataHarvestor.Events.EventType;
 import com.gamealition.DataHarvestor.HttpSend;
 import com.gamealition.DataHarvestor.SystemInfo;
 import com.gamealition.DataHarvestor.TPSUtil;
@@ -48,12 +49,13 @@ public class WorldChunksService implements Runnable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        TPSUtil tpsUtil = new TPSUtil(instance, instance.dataStore);
 
         JSONObject jobj = new JSONObject();
         jobj.put("Worlds",obj);
-        TPSUtil tpsUtil = new TPSUtil(instance, instance.dataStore);
         jobj.put("TPS",tpsUtil.getTPS());
-        jobj.put("ServerMeta",serverMeta);
+        jobj.put("Data",serverMeta);
+        jobj.put("Evnt", EventType.SERVER_META.name());
 
         httpsend.sendHTTPData("/server",jobj);
     }

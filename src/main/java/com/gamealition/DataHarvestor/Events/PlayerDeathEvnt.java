@@ -34,11 +34,11 @@ public class PlayerDeathEvnt extends PlayerEvnt {
         obj.put("Location", location.getJSON());
         obj.put("Time", getTime());
         obj.put("Player", playerToJson());
-        obj.put("Meta", getMeta());
+        obj.put("Data", getData());
         return obj;
     }
     
-    private JSONObject getMeta() {
+    private JSONObject getData() {
         JSONObject obj = new JSONObject();
         obj.put("cause", cause.name());
         if(entity !=null){

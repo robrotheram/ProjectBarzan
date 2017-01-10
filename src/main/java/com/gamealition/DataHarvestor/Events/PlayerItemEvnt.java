@@ -33,11 +33,11 @@ public class PlayerItemEvnt extends PlayerEvnt {
         obj.put("Location", location.getJSON());
         obj.put("Time", getTime());
         obj.put("Player", playerToJson());
-        obj.put("Meta", getMeta());
+        obj.put("Data", getData());
         return obj;
     }
     
-    private JSONObject getMeta() {
+    private JSONObject getData() {
         JSONObject obj = new JSONObject();
         obj.put("Item", item.getType().name());
         obj.put("Amount", item.getAmount());

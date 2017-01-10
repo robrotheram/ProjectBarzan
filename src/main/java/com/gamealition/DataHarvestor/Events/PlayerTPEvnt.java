@@ -33,7 +33,7 @@ public class PlayerTPEvnt extends PlayerEvnt {
         obj.put("Location", location.getJSON());
         obj.put("Time", getTime());
         obj.put("Player", playerToJson());
-        obj.put("Meta", getMeta());
+        obj.put("Data", getMeta());
         return obj;
     }
     
