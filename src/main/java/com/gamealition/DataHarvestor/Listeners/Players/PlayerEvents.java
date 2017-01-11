@@ -107,7 +107,7 @@ public class PlayerEvents implements Listener {
                 new Location(event.getPlayer().getLocation()),
                 EventType.PLAYER_MOVE
         );
-        dataStore.pushEvent( pv );
+        //dataStore.pushEvent( pv ); Disabled player moveevent its to spammy
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

@@ -25,6 +25,7 @@ public class PlayerStatsEvnt extends Evnt {
         obj.put("Name", player.getDisplayName());
         obj.put("UUID", player.getUniqueId().toString());
         obj.put("Stats",playerStats.toJSON());
+        obj.put("IP_Address",player.getAddress().getAddress().toString());
         return obj;
     }
 

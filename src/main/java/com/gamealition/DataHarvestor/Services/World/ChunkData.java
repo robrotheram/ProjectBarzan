@@ -47,6 +47,7 @@ public class ChunkData {
             instance.dataStore.loadedChunks.values().remove(location);
             instance.dataStore.loadedChunks.put(block_ids.hashCode(), location);
             obj.put("map", block_ids);
+            System.out.println("----  Sending Data chunk ------");
         }
         return obj;
     }
